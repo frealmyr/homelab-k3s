@@ -1,0 +1,23 @@
+---
+- hosts: k3s_controller
+  become: true
+
+  tasks:
+    #####################
+    ## Destroy cluster ##
+    #####################
+
+    - name: k3s - nuke cluster
+      shell: /usr/local/bin/k3s-uninstall.sh
+      ignore_errors: true
+
+    ####################
+    ## Create cluster ##
+    ####################
+
+    - name: k3s - create cluster using config file
+      shell: curl -sfL https://get.k3s.io | K3S_CONFIG_FILE=/home/fredrick/k3s-config.yml sh -
+
+    - name: ansible - sleep for 30 seconds (wait for cluster startup)
+      wait_for:
+        timeout: 30

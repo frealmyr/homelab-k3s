@@ -1,0 +1,50 @@
+---
+- hosts: all
+  become: true
+  max_fail_percentage: 0
+
+  tasks:
+
+    - name: network - configure static ip
+      copy:
+        dest: /etc/systemd/network/20-ethernet.network
+        content: "{{ content }}"
+      vars:
+        content: |
+          [Match]
+          Name=eth0
+
+          [Network]
+          DHCP=no
+          DNS=10.0.0.1
+          NTP=10.0.0.1
+
+          [Route]
+          Gateway=10.0.0.1
+          Metric=1024
+
+          [Address]
+          Address=10.0.0.80/16
+          RouteMetric=50
+
+          [Address]
+          Address=10.0.0.81/16
+          RouteMetric=100
+
+          [Address]
+          Address=10.0.0.82/16
+          RouteMetric=150
+
+    - name: network - enable systemd-networkd
+      systemd:
+        name: "systemd-networkd"
+        enabled: yes
+        masked: no
+        state: started
+
+    - name: network - disable dhcpcd service
+      systemd:
+        name: "dhcpcd.service"
+        enabled: yes
+        masked: no
+        state: restarted
