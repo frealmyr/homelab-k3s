@@ -1,7 +1,7 @@
 all:
   hosts:
     k3s-controller-0:
-      ansible_host: 10.0.0.80
+      ansible_host: 10.8.0.50
       ansible_user: fredrick
     # k8s-worker-0:
     #   ansible_host: 10.8.0.11
@@ -13,7 +13,7 @@ all:
 k3s_controller:
   hosts:
     k3s-controller-0:
-      ansible_host: 10.0.0.80
+      ansible_host: 10.8.0.50
       ansible_user: fredrick
 
 # k8s_workers:

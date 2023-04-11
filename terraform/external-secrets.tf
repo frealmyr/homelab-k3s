@@ -28,7 +28,7 @@ resource "google_project_iam_member" "secret_manager_accessor" {
 
 resource "kubernetes_secret" "secret_manager_accessor" {
   metadata {
-    name = "secret-manager-accessor"
+    name      = "secret-manager-accessor"
     namespace = kubernetes_namespace.external_secrets.metadata[0].name
   }
   data = {
