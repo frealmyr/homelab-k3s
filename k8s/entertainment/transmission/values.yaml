@@ -16,7 +16,7 @@ app:
         nodeSelectorTerms:
           - matchExpressions:
             - key: workload
-              operator: In
+              operator: Equal
               values:
                 - public
 
