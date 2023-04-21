@@ -6,7 +6,7 @@ app:
 
   tolerations:
     - key: "workload"
-      operator: "In"
+      operator: "Equal"
       value: "public"
       effect: "NoSchedule"
 
@@ -16,7 +16,7 @@ app:
         nodeSelectorTerms:
           - matchExpressions:
             - key: workload
-              operator: Equal
+              operator: In
               values:
                 - public
 
