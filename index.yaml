@@ -1,0 +1,68 @@
+apiVersion: v1
+entries:
+  app:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-04-21T09:48:37.307235368Z"
+    description: A Helm chart for Kubernetes
+    digest: 81f407739c850c286423b483137038a62b5dc1ba2bfece1fab604e64b46edda1
+    name: app
+    type: application
+    urls:
+    - https://github.com/frealmyr/homelab-k3s/releases/download/app-1.0.0/app-1.0.0.tgz
+    version: 1.0.0
+  argo:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-04-21T09:48:37.456313558Z"
+    description: Create argo applications under projects
+    digest: 969421b4d50396d299ed02e91e7fbd86d60575994b8a6319ab6d5319252f44f4
+    name: argo
+    type: application
+    urls:
+    - https://github.com/frealmyr/homelab-k3s/releases/download/argo-1.0.0/argo-1.0.0.tgz
+    version: 1.0.0
+  argo-app:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-04-21T09:48:37.567987173Z"
+    description: Create apps-of-apps under the appProject apps-of-app
+    digest: fa2fe181f02aeba05e8aaded20ed9080a49751d0484558a975623ec4528e3b52
+    name: argo-app
+    type: application
+    urls:
+    - https://github.com/frealmyr/homelab-k3s/releases/download/argo-app-1.0.0/argo-app-1.0.0.tgz
+    version: 1.0.0
+  external-services:
+  - apiVersion: v2
+    created: "2023-04-21T09:48:37.70189827Z"
+    description: For hooking up external services from other devices on the network
+      to Traefik
+    digest: 2bb4a752ee78b3e4ea97a282f809f1d9f4b4955ee0bbc85544b99d3a7d851508
+    name: external-services
+    type: application
+    urls:
+    - https://github.com/frealmyr/homelab-k3s/releases/download/external-services-1.0.0/external-services-1.0.0.tgz
+    version: 1.0.0
+  raw:
+  - apiVersion: v2
+    created: "2023-04-21T09:48:37.957601011Z"
+    description: A place for all the Kubernetes resources which don't already have
+      a home
+    digest: 4dfce1fbd2828cd3d58624d8ef64c76cf345b53b4d2e661f5a791a2cd4751c26
+    home: https://github.com/itscontained/charts/blob/master/itscontained/raw
+    keywords:
+    - raw
+    - incubator
+    - incubator-raw
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: nick@cajun.pro
+      name: DirtyCajunRice
+    name: raw
+    sources:
+    - https://github.com/helm/charts/blob/master/incubator/raw
+    urls:
+    - https://github.com/frealmyr/homelab-k3s/releases/download/raw-v0.2.5/raw-v0.2.5.tgz
+    version: v0.2.5
+generated: "2023-04-21T09:48:37.957620812Z"
