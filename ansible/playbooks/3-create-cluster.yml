@@ -27,6 +27,8 @@
           disable:
             - servicelb
             - traefik
+          kube-apiserver-arg: "service-node-port-range=1-65535"
+          kubelet-arg: "allowed-unsafe-sysctls=net.ipv4.ip_forward,net.ipv4.conf.all.src_valid_mark"
           write-kubeconfig: "/home/fredrick/.kube/config"
           write-kubeconfig-mode: "0644"
           tls-san:

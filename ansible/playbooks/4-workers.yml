@@ -24,6 +24,7 @@
       become_user: fredrick
       vars:
         content: |
+          kubelet-arg: "allowed-unsafe-sysctls=net.ipv4.ip_forward,net.ipv4.conf.all.src_valid_mark"
           node-label: "workload=public"
           node-taint: "workload=public:NoSchedule"
       when: "'k3s_agent' in group_names"

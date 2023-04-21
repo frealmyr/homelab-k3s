@@ -6,7 +6,7 @@ app:
 
   tolerations:
     - key: "workload"
-      operator: "Exists"
+      operator: "In"
       value: "public"
       effect: "NoSchedule"
 
