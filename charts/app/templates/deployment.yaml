@@ -221,7 +221,7 @@ spec:
       {{- range .Values.persistentVolumes.static }}
         - name: {{ .name }}
           hostPath:
-            path: /var/lib/k8s/volumes/{{ include "app.name" $ }}/{{ .name }}
+            path: /var/lib/homelab/volumes/static/{{ include "app.name" $ }}/{{ .name }}
             type: {{ default "DirectoryOrCreate" .type }}
       {{- end }}
       {{- range .Values.persistentVolumes.hostPath }}
