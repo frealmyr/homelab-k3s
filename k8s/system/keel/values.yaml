@@ -17,9 +17,9 @@ keel:
   keel:
     policy: all
     trigger: poll
-    pollSchedule: "@every 24h"
+    pollSchedule: "@every 168h"
     images:
-      - repository: keelhq/keel
+      - repository: anthares101/keel-arm
         tag: latest
   basicauth:
     enabled: true
