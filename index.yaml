@@ -35,6 +35,16 @@ entries:
   argo-app:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-04-21T11:15:21.468531795Z"
+    description: Create apps-of-apps under the appProject apps-of-app
+    digest: 3c86e0bcf078d8b1ee23e85dd13248b28c195c2470839ea9484865da26d522a5
+    name: argo-app
+    type: application
+    urls:
+    - https://github.com/frealmyr/homelab-k3s/releases/download/argo-app-1.0.1/argo-app-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-04-21T09:48:37.567987173Z"
     description: Create apps-of-apps under the appProject apps-of-app
     digest: fa2fe181f02aeba05e8aaded20ed9080a49751d0484558a975623ec4528e3b52
@@ -75,4 +85,4 @@ entries:
     urls:
     - https://github.com/frealmyr/homelab-k3s/releases/download/raw-v0.2.5/raw-v0.2.5.tgz
     version: v0.2.5
-generated: "2023-04-21T09:51:21.740883337Z"
+generated: "2023-04-21T11:15:21.468554695Z"
