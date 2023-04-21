@@ -55,13 +55,27 @@ app:
       - name: frontend
         service:
           name: http
-          port: 51821
+          port: 80
         hosts:
-          - host: wireguard.fmlab.no
+          - host: news.fmlab.no
             paths:
               - path: /
                 pathType: ImplementationSpecific
         tls:
-          - secretName: wireguard
+          - secretName: certificate-freshrss
             hosts:
-              - wireguard.fmlab.no
+              - news.fmlab.no
+      - name: api
+        className: traefik-external
+        service:
+          name: http
+          port: 80
+        hosts:
+          - host: news-api.fmlab.no
+            paths:
+              - path: /api/fever.php
+                pathType: Exact
+        tls:
+          - secretName: certificate-freshrss-api
+            hosts:
+              - news-api.fmlab.no
