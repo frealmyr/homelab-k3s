@@ -9,7 +9,7 @@ keel:
               values:
               - srv-rpi-01
   image:
-    repository: keelhq/keel
+    repository: anthares101/keel-arm
     tag: latest
     pullPolicy: Always
   helmProvider:
