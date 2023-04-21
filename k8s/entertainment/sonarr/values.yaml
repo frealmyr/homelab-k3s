@@ -35,8 +35,8 @@ app:
         hostPath: /media/shared
 
   environmentVariables:
-    PUID: 1000
-    PGID: 1000
+    PUID: 2000
+    PGID: 2000
     TZ: Europe/Oslo
 
   containerPorts:

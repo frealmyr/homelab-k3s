@@ -290,6 +290,21 @@
         state: restarted
       when: unattended_upgrades.changed or auto_upgrades.changed
 
+    ###########
+    ## Users ##
+    ###########
+
+    - name: users - create non-root users
+      user:
+        uid: "{{ item.id }}"
+        name: "{{ item.name }}"
+        create_home: false
+        shell: /usr/sbin/nologin
+        state: present
+      loop:
+        - { id: 2000, name: entertainment }
+      when: ["'k3s_agent' in group_names"]
+
     #############
     ## Folders ##
     #############
@@ -310,8 +325,8 @@
       file:
         path: "{{ item }}"
         state: directory
-        owner: 2001
-        group: 2001
+        owner: 2000
+        group: 2000
         recurse: true
         mode: 0777
       with_items:
@@ -325,7 +340,7 @@
     - name: nfs - add shared media folder export
       blockinfile:
         path: /etc/exports
-        block: /media/shared 10.1.0.0/24(rw,all_squash,insecure,async,no_subtree_check,anonuid=2003,anongid=2003)
+        block: /media/shared 10.1.0.0/24(rw,all_squash,insecure,async,no_subtree_check,anonuid=2000,anongid=2000)
       when: ["'k3s_agent' in group_names"]
 
     - name: nfs - reload nfs exports
