@@ -13,8 +13,8 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: 'websecure'
     traefik.ingress.kubernetes.io/router.tls: 'true'
     {{- end }}
-    traefik.ingress.kubernetes.io/router.middlewares: "{{ .Values.ingresses.className }}-security@kubernetescrd"
-    {{- if eq .Values.ingresses.className "traefik-external" }}
+    traefik.ingress.kubernetes.io/router.middlewares: "{{ .className | default "traefik-internal" }}-security@kubernetescrd"
+    {{- if eq .className "traefik-external" }}
     external-dns.alpha.kubernetes.io/target: "vpn.fmlab.no" # Create CNAME instead of A record
     kubernetes.io/ingress.class: traefik-external # Annotation filter for external-dns
     {{- end }}
@@ -22,7 +22,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingresses.className }}
+  ingressClassName: {{ .className | default "traefik-internal" }}
   {{- $serviceName := .service.name -}}
   {{- $servicePort := .service.port -}}
   {{- if .tls }}
@@ -51,5 +51,4 @@ spec:
           {{- end }}
     {{- end }}
 {{- end }}
-
 {{- end }}

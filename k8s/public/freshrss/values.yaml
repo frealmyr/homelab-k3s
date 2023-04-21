@@ -1,0 +1,67 @@
+app:
+  image:
+    repository: freshrss/freshrss
+    tag: arm
+    pullPolicy: Always
+
+  tolerations:
+    - key: "workload"
+      operator: "Equal"
+      value: "public"
+      effect: "NoSchedule"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: workload
+              operator: In
+              values:
+                - public
+
+  annotations:
+    keel.sh/policy: "minor"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 168h"
+
+  persistentVolumes:
+    static:
+      - name: data
+        mountPath: /var/www/FreshRSS/data
+      - name: extensions
+        mountPath: /var/www/FreshRSS/extensions
+
+  environmentVariables:
+    TZ: Europe/Oslo
+    CRON_MIN: '2,32'
+
+  containerPorts:
+    - name: http
+      containerPort: 80
+      protocol: TCP
+
+  services:
+    - name: http
+      type: ClusterIP
+      ports:
+        - name: http
+          port: 80
+          targetPort: 80
+
+  ingresses:
+    enabled: true
+    ingress:
+      - name: frontend
+        service:
+          name: http
+          port: 51821
+        hosts:
+          - host: wireguard.fmlab.no
+            paths:
+              - path: /
+                pathType: ImplementationSpecific
+        tls:
+          - secretName: wireguard
+            hosts:
+              - wireguard.fmlab.no
