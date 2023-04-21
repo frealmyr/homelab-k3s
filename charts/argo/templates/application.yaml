@@ -1,0 +1,28 @@
+{{- range $project_key, $project_value := .Values.appProject }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $project_key }}
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster
+    namespace: argocd
+  project: default
+  source:
+    targetRevision: {{ $.Values.targetRevision }}
+    path: charts/argo-app
+    repoURL: {{ $.Values.repoURL }}
+    helm:
+      values: |
+        appProject:
+          {{ $project_key }}:
+            applications:
+              {{- with $project_value.applications }}
+                {{- toYaml . | nindent 14 }}
+              {{- end }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+{{- end }}

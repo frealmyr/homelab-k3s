@@ -1,4 +1,13 @@
 cert-manager:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - srv-rpi-01
   installCRDs: true
   prometheus:
     enabled: false

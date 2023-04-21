@@ -4,6 +4,22 @@ app:
     tag: latest
     pullPolicy: Always
 
+  tolerations:
+    - key: "workload"
+      operator: "Exists"
+      value: "public"
+      effect: "NoSchedule"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: workload
+              operator: In
+              values:
+                - public
+
   annotations:
     keel.sh/policy: "all"
     keel.sh/trigger: poll

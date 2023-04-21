@@ -1,11 +1,11 @@
 ---
-- hosts: k3s_controller, k3s_workers
+- hosts: k3s_server, k3s_agent
   become: true
 
   tasks:
     - name: system - rebooting worker nodes (cluster created)
       reboot:
-      when: "'k3s_workers' in group_names"
+      when: "'k3s_agent' in group_names"
 
     - name: ansible - sleep for 10 seconds
       wait_for:
@@ -13,4 +13,4 @@
 
     - name: system - rebooting controller nodes (cluster created)
       reboot:
-      when: "'k3s_controller' in group_names"
+      when: "'k3s_server' in group_names"

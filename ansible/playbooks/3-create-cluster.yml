@@ -1,5 +1,5 @@
 ---
-- hosts: k3s_controller
+- hosts: k3s_server
   become: true
 
   tasks:
@@ -23,14 +23,16 @@
       vars:
         content: |
           disable-cloud-controller: true
+          disable-helm-controller: true
           disable:
             - servicelb
             - traefik
           write-kubeconfig: "/home/fredrick/.kube/config"
           write-kubeconfig-mode: "0644"
           tls-san:
-            - "10.8.0.50"
+            - "10.2.0.10"
           cluster-init: true
+          default-local-storage-path: "/var/lib/homelab/volumes/dynamic"
 
     - name: k3s - create cluster
       shell: curl -sfL https://get.k3s.io | K3S_CONFIG_FILE=/home/fredrick/k3s-config.yml sh -

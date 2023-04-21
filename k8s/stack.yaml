@@ -1,0 +1,87 @@
+repoURL: https://github.com/frealmyr/homelab-k3s
+targetRevision: main
+basePath: k8s
+
+namespaces:
+  entertainment:
+
+appProject:
+  entertainment:
+    applications:
+      sonarr:
+        namespace:
+          name: entertainment
+      transmission:
+        namespace:
+          name: entertainment
+
+  home:
+    applications:
+      homeassistant:
+        namespace:
+          create: true
+      homebox:
+        namespace:
+          create: true
+      homer:
+        namespace:
+          create: true
+      omada:
+        namespace:
+          create: true
+
+  public:
+    applications:
+      wireguard:
+        namespace:
+          create: true
+
+  system:
+    applications:
+      external-dns:
+        namespace:
+          create: true
+        sync:
+          wave: "-3"
+      external-secrets:
+        namespace:
+          name: external-secrets
+        sync:
+          wave: "-4"
+      cloudflare-ddns:
+        namespace:
+          create: true
+        sync:
+          wave: "-3"
+      cert-manager:
+        namespace:
+          create: true
+        sync:
+          wave: "-3"
+      keel:
+        namespace:
+          name: kube-system
+      traefik-internal:
+        namespace:
+          name: traefik-internal
+          create: true
+        sync:
+          wave: "-1"
+        ignoreDifferences:
+          - group: ""
+            kind: ConfigMap
+            name: traefik-whitelist
+            jsonPointers:
+              - /data/whitelist
+      traefik-external:
+        namespace:
+          name: traefik-external
+          create: true
+        sync:
+          wave: "-1"
+        ignoreDifferences:
+          - group: ""
+            kind: ConfigMap
+            name: traefik-whitelist
+            jsonPointers:
+              - /data/whitelist

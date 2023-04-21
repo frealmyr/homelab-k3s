@@ -16,7 +16,7 @@ resource "helm_release" "metallb" {
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - k3s-controller-0
+                - srv-rpi-01
     speaker:
       affinity:
         nodeAffinity:
@@ -26,7 +26,7 @@ resource "helm_release" "metallb" {
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - k3s-controller-0
+                - srv-rpi-01
   EOF
   ]
 }
@@ -55,8 +55,8 @@ resource "helm_release" "metallb_address_pool" {
           namespace: metallb-system
         spec:
           addresses:
-            - 10.8.0.10/32
-            - 10.8.0.11/32
+            - 10.2.0.10/32
+            - 10.2.0.11/32
       - apiVersion: metallb.io/v1beta1
         kind: L2Advertisement
         metadata:

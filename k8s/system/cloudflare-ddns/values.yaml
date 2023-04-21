@@ -3,6 +3,16 @@ app:
     repository: oznu/cloudflare-ddns
     tag: latest
 
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - srv-rpi-01
+
   environmentVariables:
     ZONE: "fmlab.no"
     SUBDOMAIN: "vpn"

@@ -1,4 +1,18 @@
 traefik:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: workload
+              operator: In
+              values:
+                - public
+  tolerations:
+    - key: "workload"
+      operator: "Exists"
+      value: "public"
+      effect: "NoSchedule"
   namespaceOverride: traefik-external
   podSecurityPolicy:
     enabled: false
@@ -19,7 +33,7 @@ traefik:
     annotations:
       metallb.universe.tf/allow-shared-ip: sharing-is-caring
     spec:
-      loadBalancerIP: 10.8.0.11
+      loadBalancerIP: 10.2.0.11
   ingressRoute:
     dashboard:
       enabled: false

@@ -1,17 +1,9 @@
 ---
-- hosts: all
+- hosts: k3s_server, k3s_agent
   become: true
 
   vars:
     synology_ip: 10.7.0.11
-    sysctl_config:
-      net.ipv4.ip_forward: 1
-      net.ipv4.conf.all.forwarding: 1
-      net.ipv6.conf.all.forwarding: 1
-      net.bridge.bridge-nf-call-iptables: 1
-      net.bridge.bridge-nf-call-ip6tables: 1
-      fs.inotify.max_user_watches: 524288
-      fs.inotify.max_user_instances: 512
 
   tasks:
     ###############
@@ -29,24 +21,40 @@
 
           [Network]
           DHCP=no
-          DNS=10.8.0.1
-          NTP=10.8.0.1
+          DNS=10.2.0.1
+          NTP=no.pool.ntp.org
 
           [Route]
-          Gateway=10.8.0.1
+          Gateway=10.2.0.1
           Metric=1024
 
           [Address]
-          Address=10.8.0.10/16
+          Address=10.2.0.10/16
           RouteMetric=50
+      when: ["'k3s_server' in group_names"]
+
+    - name: network - configure static ip
+      copy:
+        dest: /etc/systemd/network/20-ethernet.network
+        content: "{{ content }}"
+      vars:
+        content: |
+          [Match]
+          Name=eth0
+
+          [Network]
+          DHCP=no
+          DNS=10.2.0.1
+          NTP=no.pool.ntp.org
+
+          [Route]
+          Gateway=10.2.0.1
+          Metric=1024
 
           [Address]
-          Address=10.8.0.11/16
-          RouteMetric=100
-
-          [Address]
-          Address=10.8.0.50/16
-          RouteMetric=150
+          Address=10.2.0.11/16
+          RouteMetric=50
+      when: ["'k3s_agent' in group_names"]
 
     - name: network - enable systemd services
       systemd:
@@ -58,6 +66,7 @@
         - systemd-networkd
         - systemd-resolved
         - systemd-timesyncd
+
 
     ##############
     ## Hostname ##
@@ -90,8 +99,6 @@
     ## Swap ##
     ##########
 
-    # Kubernetes requires swap to be disabled
-    # removing swap also speeds up reboots on rpi
     - name: swap - remove swapfile from /etc/fstab if it exist
       mount:
         name: "{{ item }}"
@@ -116,7 +123,7 @@
     ## Raspberry Pi ##
     ##################
 
-    - name: rpi - enable container related cgroups
+    - name: rpi - enable cgroups for limiting resources for containers
       replace:
         path: /boot/cmdline.txt
         regexp: '^([\w](?!.*\b{{ item }}\b).*)$'
@@ -150,8 +157,6 @@
         masked: yes
         state: stopped
       with_items:
-        - apt-daily-upgrade.timer
-        - apt-daily.timer
         - hciuart.service
         - man-db.timer
         - raspi-config.service
@@ -167,41 +172,17 @@
 
     # UNI-T voltmeter shows 1.15A max with USB SSD connected. So around 1A lower than the 2.4A max the PSU provides.
     # The 120mm desktop FAN which is connected to the same power supply should cool this effectivly
-    # - name: rpi - overclock to 2.0GHz
-    #   lineinfile:
-    #     path: /boot/config.txt
-    #     regexp: "{{ item.find }}"
-    #     line: "{{ item.value }}"
-    #     state: present
-    #   with_items:
-    #     - find: .*over_voltage=.*
-    #       value: over_voltage=6
-    #     - find: .*arm_freq=.*
-    #       value: arm_freq=2000
-
-    # #########
-    # ## UPS ##
-    # #########
-
-    # # Here we piggyback the UPS running on Synology NAS, simply need to allowlist the IPs of clients.
-    # - name: ups - configure nut to use netclient
-    #   replace:
-    #     path: /etc/nut/nut.conf
-    #     regexp: '^MODE=none'
-    #     replace: 'MODE=netclient'
-
-    # - name: ups - configure nut to monitor nas
-    #   lineinfile:
-    #     path: /etc/nut/upsmon.conf
-    #     regexp: '^MONITOR.*'
-    #     line: "MONITOR ups@{{ synology_ip }} 1 monuser secret slave"
-    #     state: present
-
-    # - name: ups - restart and enable service
-    #   service:
-    #     name: nut-client
-    #     enabled: yes
-    #     state: restarted
+    - name: rpi - overclock to 2.0GHz
+      lineinfile:
+        path: /boot/config.txt
+        regexp: "{{ item.find }}"
+        line: "{{ item.value }}"
+        state: present
+      with_items:
+        - find: .*over_voltage=.*
+          value: over_voltage=6
+        - find: .*arm_freq=.*
+          value: arm_freq=2000
 
     ########################
     ## Modprobe / Systemd ##
@@ -224,7 +205,7 @@
         - br_netfilter
         - overlay
 
-    - name: systemctl - allow ip forwarding
+    - name: systemctl - tweak parameters
       sysctl:
         name: "{{ item.key }}"
         value: "{{ item.value }}"
@@ -233,6 +214,123 @@
         reload: yes
         ignoreerrors: no
       with_dict: "{{ sysctl_config }}"
+      vars:
+        sysctl_config:
+          fs.inotify.max_user_instances: 512
+          fs.inotify.max_user_watches: 524288
+          net.bridge.bridge-nf-call-ip6tables: 1
+          net.bridge.bridge-nf-call-iptables: 1
+          net.core.rmem_max: 2500000
+          net.ipv4.conf.all.forwarding: 1
+          net.ipv4.ip_forward: 1
+          net.ipv6.conf.all.forwarding: 1
+
+    #########
+    ## UPS ##
+    #########
+
+    # Piggyback the UPS running on Synology NAS, remember to allowlist the rPi IP's.
+    - name: ups - configure nut to use netclient
+      replace:
+        path: /etc/nut/nut.conf
+        regexp: '^MODE=none'
+        replace: 'MODE=netclient'
+
+    - name: ups - configure nut to monitor nas
+      lineinfile:
+        path: /etc/nut/upsmon.conf
+        regexp: '^MONITOR.*'
+        line: "MONITOR ups@{{ interface.synology }} 1 monuser secret slave"
+        state: present
+      vars:
+        interface:
+          synology: 10.2.0.20
+
+    - name: ups - restart and enable service
+      service:
+        name: nut-client
+        enabled: yes
+        state: restarted
+
+    ########################
+    ## Automated upgrades ##
+    ########################
+
+    - name: unattended-upgrades - configure package pattern match
+      copy:
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
+        content: "{{ content }}"
+      vars:
+        content: |
+          Unattended-Upgrade::Origins-Pattern {
+                  "origin=Raspbian,codename=${distro_codename},label=Raspbian";
+                  "origin=Raspberry Pi Foundation,codename=${distro_codename},label=Raspberry Pi Foundation";
+          };
+          Unattended-Upgrade::Automatic-Reboot "true";
+          Unattended-Upgrade::Automatic-Reboot-Time "03:00";
+      register: unattended_upgrades
+
+    - name: unattended-upgrades - configure to check for updates each week
+      copy:
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        content: "{{ content }}"
+      vars:
+        content: |
+          APT::Periodic::Update-Package-Lists "1";
+          APT::Periodic::Download-Upgradeable-Packages "1";
+          APT::Periodic::AutocleanInterval "3";
+          APT::Periodic::Verbose "1";
+          APT::Periodic::Unattended-Upgrade "1";
+      register: auto_upgrades
+
+    - name: unattended-upgrades - restart and enable service
+      service:
+        name: unattended-upgrades.service
+        enabled: yes
+        state: restarted
+      when: unattended_upgrades.changed or auto_upgrades.changed
+
+    #############
+    ## Folders ##
+    #############
+
+    - name: folder - create homelab folders
+      file:
+        path: "{{ item }}"
+        state: directory
+        group: root
+        mode: 0600
+      loop:
+        - /var/lib/homelab
+        - /var/lib/homelab/volumes
+        - /var/lib/homelab/volumes/dynamic
+        - /var/lib/homelab/volumes/static
+
+    - name: folder - create shared media folder
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: 2001
+        group: 2001
+        recurse: true
+        mode: 0777
+      with_items:
+        - /media/shared
+        - /media/shared/anime
+        - /media/shared/anime/series
+        - /media/shared/anime/movies
+        - /media/shared/tv-series
+      when: ["'k3s_agent' in group_names"]
+
+    - name: nfs - add shared media folder export
+      blockinfile:
+        path: /etc/exports
+        block: /media/shared 10.1.0.0/24(rw,all_squash,insecure,async,no_subtree_check,anonuid=2003,anongid=2003)
+      when: ["'k3s_agent' in group_names"]
+
+    - name: nfs - reload nfs exports
+      command: exportfs -ra
+      when: ["'k3s_agent' in group_names"]
 
     ############
     ## Reboot ##
@@ -240,15 +338,3 @@
 
     - name: system - reboot (configuration)
       reboot:
-
-    # - name: add host to inventory
-    #   add_host:
-    #     name: k3s-controller-0
-    #     ansible_host: "10.8.0.50"
-    #     groups: [all]
-
-    # - name: add host to inventory
-    #   add_host:
-    #     name: k3s-controller-0
-    #     ansible_host: "10.8.0.50"
-    #     groups: [k3s_controller]

@@ -38,18 +38,27 @@ resource "helm_release" "argocd" {
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
 
-  version = "5.27.1"
+  version = "5.29.1"
 
   namespace = "argocd"
 
   values = [<<EOF
+    global:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - srv-rpi-01
     applicationSet:
       enabled: false
     metrics:
       enabled: true
       serviceMonitor:
         enabled: false
-    controller:
       metrics:
         enabled: true
         serviceMonitor:
@@ -141,7 +150,7 @@ resource "helm_release" "argocd_apps_homelab" {
           - resources-finalizer.argocd.argoproj.io
         project: default
         source:
-          repoURL: 'https://github.com/frealmyr/homelab.git'
+          repoURL: 'https://github.com/frealmyr/homelab-k3s.git'
           targetRevision: main
           path: charts/argo
           helm:

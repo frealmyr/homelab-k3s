@@ -8,7 +8,6 @@
       apt:
         upgrade: full
         update_cache: yes
-        cache_valid_time: 3600
       register: package_upgrade
 
     - name: system - reboot (kernel update)
@@ -25,12 +24,17 @@
         purge: true
       vars:
         packages:
+          - containerd
           - dhcpcd5
+          - docker
+          - docker-engine
+          - docker.io
           - fake-hwclock
           - ifupdown
           - isc-dhcp-client
           - isc-dhcp-common
           - openresolv
+          - runc
 
     - name: apt - install misc packages
       apt:
@@ -39,7 +43,12 @@
         update_cache: yes
       vars:
         packages:
+          - ca-certificates
           - curl
+          - gnupg
           - htop
+          - nfs-kernel-server
+          - ntp
           - nut
           - ufw
+          - unattended-upgrades

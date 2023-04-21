@@ -1,5 +1,5 @@
 ---
-- hosts: k3s_controller, k3s_workers
+- hosts: k3s_server, k3s_agent
   become: true
   vars:
     subnet_pod: 10.244.0.0/16
