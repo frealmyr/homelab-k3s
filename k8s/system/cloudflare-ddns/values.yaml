@@ -19,7 +19,7 @@ app:
     CRON: "* */1 * * *"
 
   secretEnvironmentVariables:
-    - name: API_KEY
+    - name: CF_API_TOKEN
       secret:
         name: cloudflare-credentials
-        key: api_token
+        key: cloudflare_ddns_token

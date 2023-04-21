@@ -159,10 +159,6 @@ resource "helm_release" "argocd_apps_homelab" {
               - ../../k8s/stack.yaml
         destination:
           server: 'https://kubernetes.default.svc'
-        syncPolicy:
-          automated:
-            prune: false
-            selfHeal: false
   EOF
   ]
   depends_on = [helm_release.argocd]
