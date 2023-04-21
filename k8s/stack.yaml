@@ -32,6 +32,9 @@ appProject:
 
   public:
     applications:
+      freshrss:
+        namespace:
+          create: true
       wireguard:
         namespace:
           create: true
