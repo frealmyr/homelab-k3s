@@ -10,7 +10,7 @@ traefik:
                 - public
   tolerations:
     - key: "workload"
-      operator: "Exists"
+      operator: "In"
       value: "public"
       effect: "NoSchedule"
   namespaceOverride: traefik-external
