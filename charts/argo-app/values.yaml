@@ -1,4 +1,4 @@
-repoURL: https://github.com/frealmyr/homelab-k3
+repoURL: https://github.com/frealmyr/homelab-k3s
 targetRevision: main
 basePath: k8s
 
