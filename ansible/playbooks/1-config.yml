@@ -226,6 +226,39 @@
           net.ipv6.conf.all.forwarding: 1
 
     #########
+    ## K3s ##
+    #########
+
+    # K3s default is to keep containers running after shutdown
+    # rPi unable to handle I/O during startup, k3s-server crashlooping, solution to kill all containers on before starting k3s
+    - name: systemd - stop k3s containers on shutdown
+      copy:
+        dest: /etc/systemd/system/k3s-killall.service
+        content: "{{ content }}"
+      vars:
+        content: |
+          [Unit]
+          Description=Stop k3s containers on before k3s-server
+          After=network.target
+          Before=k3s.service
+
+          [Service]
+          Type=oneshot
+          User=1000
+          Group=1000
+          ExecStart=/usr/local/bin/k3s-killall.sh
+          RemainAfterExit=yes
+
+          [Install]
+          WantedBy=multi-user.target k3s.service
+
+    - name: systemd - restart and enable service
+      systemd:
+        name: k3s-killall.service
+        daemon_reload: true
+        enabled: true
+
+    #########
     ## UPS ##
     #########
 
