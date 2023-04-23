@@ -2,11 +2,7 @@
 
 This folder contains ansible playbooks for provisioning the Raspberry Pi cluster in my homelab.
 
-The playbooks are repeatable. And will for instance destroy your Kubernetes cluster before creating a new one if you re-run the `k8s-5-create-cluster.yml` playbook. :D
-
 `main.yml` triggers all playbooks under the `playbooks/` folder, the hostnames and ip addresses for each Raspberry Pi is defined in `hosts.yaml`.
-
-After all of the playbooks are provisioned, you will end up with a three-node Kuberentes cluster.
 
 ## Running these playbooks
 

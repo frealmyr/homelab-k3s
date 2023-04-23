@@ -3,7 +3,6 @@
 This is where the cluster is initially boostrapped using Terraform.
 
   - Configure networking
-    - Adds calico as CNI network plugin.
     - Adds metallb for loadbalancer resources in cluster.
       - For allowing multiple pods to port-forward on nodes.
   - Create GSA credentials for `external-secrets` operator.
