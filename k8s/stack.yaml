@@ -65,6 +65,7 @@ appProject:
         namespace:
           name: kube-system
       system-upgrade:
+        type: kustomization
         namespace:
           create: true
       traefik-internal:
