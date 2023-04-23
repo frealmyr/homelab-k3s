@@ -64,6 +64,9 @@ appProject:
       keel:
         namespace:
           name: kube-system
+      system-upgrade:
+        namespace:
+          create: true
       traefik-internal:
         namespace:
           name: traefik-internal
