@@ -13,6 +13,11 @@ spec:
     matchExpressions:
     - key: node-role.kubernetes.io/control-plane
       operator: DoesNotExist
+  tolerations:
+    - key: workload
+      operator: Equal
+      value: "public"
+      effect: "NoSchedule"
   prepare:
     args:
     - prepare
