@@ -6,12 +6,28 @@ namespaces:
   entertainment:
 
 appProject:
+  databases:
+    applications:
+      postgres:
+        namespace:
+          name: databases
+        sync:
+          wave: "-1"
+      redis:
+        namespace:
+          name: databases
+        sync:
+          wave: "-1"
+
   entertainment:
     applications:
       sonarr:
         namespace:
           name: entertainment
       transmission:
+        namespace:
+          name: entertainment
+      kaizoku:
         namespace:
           name: entertainment
 
@@ -61,6 +77,13 @@ appProject:
           create: true
         sync:
           wave: "-3"
+      crossplane:
+        namespace:
+          name: crossplane-system
+          create: true
+        sync:
+          autoSync: true
+          wave: "-2"
       keel:
         namespace:
           name: kube-system
