@@ -18,7 +18,7 @@ app:
     PUID: "1000"
     PGID: "1000"
     TZ: "Europe/Oslo"
-    REDIS_HOST: ""
+    REDIS_HOST: "redis.databases.svc.cluster.local"
     REDIS_PORT: 6379
 
   secretEnvironmentVariables:
