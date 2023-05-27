@@ -24,7 +24,7 @@ spec:
       login: true
   writeConnectionSecretToRef:
     name: credentials-db-kaizoku
-    namespace: kaizoku
+    namespace: entertainment
 ---
 apiVersion: postgresql.sql.crossplane.io/v1alpha1
 kind: Grant
