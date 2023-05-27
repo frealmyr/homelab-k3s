@@ -20,6 +20,7 @@ app:
     TZ: "Europe/Oslo"
     REDIS_HOST: "redis.databases.svc.cluster.local"
     REDIS_PORT: 6379
+    DATABASE_URL: postgresql://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/kaizoku
 
   secretEnvironmentVariables:
     - name: DB_USERNAME
