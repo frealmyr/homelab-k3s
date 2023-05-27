@@ -3,6 +3,7 @@ targetRevision: main
 basePath: k8s
 
 namespaces:
+  databases:
   entertainment:
 
 appProject:
@@ -82,7 +83,6 @@ appProject:
           name: crossplane-system
           create: true
         sync:
-          autoSync: true
           wave: "-2"
       keel:
         namespace:
