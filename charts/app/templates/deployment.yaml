@@ -39,12 +39,6 @@ spec:
         - name: {{ include "app.name" . }}
           {{- if or .Values.environmentVariables .Values.secretEnvironmentVariables }}
           env:
-          {{- if .Values.environmentVariables }}
-          {{- range $key, $value := .Values.environmentVariables }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-          {{- end }}
-          {{- end }}
           {{- if .Values.secretEnvironmentVariables }}
           {{- range .Values.secretEnvironmentVariables }}
             - name: {{ .name }}
@@ -52,6 +46,12 @@ spec:
                 secretKeyRef:
                   name: {{ .secret.name }}
                   key: {{ .secret.key | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.environmentVariables }}
+          {{- range $key, $value := .Values.environmentVariables }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
           {{- end }}
           {{- end }}
           {{- end }}
