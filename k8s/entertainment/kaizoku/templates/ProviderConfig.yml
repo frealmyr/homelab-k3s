@@ -38,6 +38,7 @@ spec:
   forProvider:
     privileges:
       - ALL
+      - CREATE
     withOption: GRANT
     roleRef:
       name: kaizoku
