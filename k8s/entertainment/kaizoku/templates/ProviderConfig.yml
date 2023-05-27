@@ -36,7 +36,9 @@ spec:
   providerConfigRef:
     name: postgres
   forProvider:
-    withOption: ADMIN
+    privileges:
+      - ALL
+    withOption: GRANT
     roleRef:
       name: kaizoku
     databaseRef:
