@@ -25,19 +25,19 @@ app:
   secretEnvironmentVariables:
     - name: DB_USERNAME
       secret:
-        name: credentials-db-freshrss
+        name: credentials-db-kaizoku
         key: username
     - name: DB_PASSWORD
       secret:
-        name: credentials-db-freshrss
+        name: credentials-db-kaizoku
         key: password
     - name: DB_HOST
       secret:
-        name: credentials-db-freshrss
+        name: credentials-db-kaizoku
         key: endpoint
     - name: DB_PORT
       secret:
-        name: credentials-db-freshrss
+        name: credentials-db-kaizoku
         key: port
 
   containerPorts:
