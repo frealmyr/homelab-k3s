@@ -44,21 +44,4 @@ spec:
       name: kaizoku
     databaseRef:
       name: kaizoku
----
-apiVersion: postgresql.sql.crossplane.io/v1alpha1
-kind: Grant
-metadata:
-  name: kaizoku-public
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
-spec:
-  providerConfigRef:
-    name: postgres
-  forProvider:
-    privileges:
-      - USAGE
-    withOption: GRANT
-    roleRef:
-      name: kaizoku
-    databaseRef:
-      name: public
+
